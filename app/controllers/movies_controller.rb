@@ -12,8 +12,7 @@ class MoviesController < ApplicationController
 
   def index
     @sort = params[:sort_by]
-    @movies = Movie.where(:all, :order.(params[@sort]))
-    
+    @movies = sort == nil ?  movies = Movie.all : Movie.order ("#{sort} ASC")
     
   end
 

@@ -17,15 +17,15 @@ class MoviesController < ApplicationController
     session[:ratings] ||= @all_ratings
     session[:sort_by] ||= 'id'
 
-    @title_hilite = session[:title_hilite] = "hilite" if params[:sort_by] == 'title'
-    @date_hilite = session[:date_hilite] = "hilite" if params[:sort_by] == 'release_date'
+    @title_hilite = session[:title_hilite] = 'hilite' if params[:sort_by] == 'title'
+    @date_hilite = session[:date_hilite] = 'hilite' if params[:sort_by] == 'release_date'
 
     #Remembering the user's preferences
     session[:ratings] = params[:ratings].keys if params[:ratings]
     session[:sort_by] = params[:sort_by] if params[:sort_ny]
 
     #to preserve restfulness
-    redirect_to movies_path(ratings: Hash[session[:ratings].map {|r| [r,1]}], sort: session[:sort_by]) if  params[:ratings].nil? || params[:sort].nil?
+    redirect_to movies_path(ratings: Hash[session[:ratings].map {|r| [r,1]}], sort_by: session[:sort_by]) if  params[:ratings].nil? || params[:sort].nil?
 
     @ratings = session[:ratings]
     @sort_by = session[:sort_by]

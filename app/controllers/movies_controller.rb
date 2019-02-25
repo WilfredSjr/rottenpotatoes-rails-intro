@@ -11,8 +11,37 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @sort_by = params[:sort_by]
-    @movies = Movie.all.order(@sort_by)
+    if params[:sort_by].nil? && params[:ratings].nil? &&
+        (!session[:sort_by].nil? || !session[:ratings].nil?)
+      redirect_to movies_path(:sort_by => session[:sort_by], :ratings => session[:ratings])
+    end
+
+    @sort = params[:sort_by]
+    @ratings = params[:ratings] 
+    if @ratings.nil?
+      ratings = Movie.ratings 
+    else
+      ratings = @ratings.keys
+    end
+
+    @all_ratings = Movie.ratings.inject(Hash.new) do |all_ratings, rating|
+          all_ratings[rating] = @ratings.nil? ? false : @ratings.has_key?(rating) 
+          all_ratings
+      end
+      
+    if !@sort.nil?
+      begin
+        @movies = Movie.order("#{@sort_by} ASC").find_all_by_rating(ratings)
+      rescue ActiveRecord::StatementInvalid
+        flash[:warning] = "Movies cannot be sorted by #{@sort_by}."
+        @movies = Movie.find_all_by_rating(ratings)
+      end
+    else
+      @movies = Movie.find_all_by_rating(ratings)
+    end
+
+    session[:sort_by] = @sort_by
+    session[:ratings] = @ratings
     
   end
 

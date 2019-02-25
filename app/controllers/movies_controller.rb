@@ -22,7 +22,8 @@ class MoviesController < ApplicationController
     else
       @movies = Movie.where(:rating => @checked_ratings)
     end
-
+  end
+  
   def new
     # default: render 'new' template
   end

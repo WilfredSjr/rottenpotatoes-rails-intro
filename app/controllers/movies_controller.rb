@@ -11,14 +11,17 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @sort_by = params[:sort_by]
-    @movies = Movie.all.order(@sort_by)
-    @all_ratings = Movie.ratings
-    @set_ratings = params[:ratings]
-    if !@set_ratings
-        @set_ratings = Hash.new
-    end
+   @all_ratings = Movie.order(:rating).select(:rating).map(&:rating).uniq
+    @checked_ratings = check
+    @checked_ratings.each do |rating|
+      params[rating] = true
   end
+  
+  if params[:sort_by]
+      @movies = Movie.order(params[:sort_by])
+    else
+      @movies = Movie.where(:rating => @checked_ratings)
+    end
 
   def new
     # default: render 'new' template

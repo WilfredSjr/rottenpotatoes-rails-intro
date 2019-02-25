@@ -19,10 +19,10 @@ class MoviesController < ApplicationController
     
     if params[:sort_by] == 'title'
     @title_hilite = session[:title_hilite] = "hilite" 
-    
-    if params[:sort_by] == 'release_date'
+    elsif params[:sort_by] == 'release_date'
     @release_date_hilite = session[:release_date_hilite] = "hilite" 
-
+    end
+    
     #Remembering the user's preferences
     session[:ratings] = params[:ratings].keys if params[:ratings]
     session[:sort_by] = params[:sort_by] if params[:sort_by]

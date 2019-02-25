@@ -13,7 +13,11 @@ class MoviesController < ApplicationController
   def index
     @sort_by = params[:sort_by]
     @movies = Movie.all.order(@sort_by)
-    @all_ratings = Movie.getRatings
+    @all_ratings = Movie.ratings
+    @set_ratings = params[:ratings]
+    if !@set_ratings
+        @set_ratings = Hash.new
+    end
   end
 
   def new
